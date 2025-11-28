@@ -18,13 +18,22 @@ class StudentDashboardController extends Controller
             return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
         }
 
-        // 👇 Get list of already applied scholarship IDs
-        $appliedScholarshipIds = \App\Models\ApplicationForm::where('student_id', $studentId)
-            ->pluck('scholarship_id');
+        // Get all applications for the student, with scholarship info
+        $applications = ApplicationForm::where('student_id', $studentId)
+            ->with('scholarship') // Eager load scholarship data
+            ->get();
 
-        // 👇 Pass both to the view
+        // Calculate the counts
+        $totalApplications = $applications->count();
+        $approvedApplications = $applications->where('status', 'approved')->count();
+        $pendingApplications = $applications->where('status', 'pending')->count();
+
+        // Pass all data to the view explicitly
         return view('Student.dashboard', [
-            'appliedScholarshipIds' => $appliedScholarshipIds
+            'applications' => $applications,
+            'totalApplications' => $totalApplications,
+            'approvedApplications' => $approvedApplications,
+            'pendingApplications' => $pendingApplications,
         ]);
     }
 

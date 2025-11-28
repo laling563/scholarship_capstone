@@ -7,7 +7,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="fw-bold text-primary mb-0">
-                        <i class="bi bi-plus-circle me-2"></i> Create New Scholarship
+                        <i class="bi bi-pencil-square me-2"></i> Edit Scholarship
                     </h2>
                 </div>
                 <a href="{{ route('sponsor.scholarships.index') }}" class="btn btn-outline-secondary">
@@ -51,11 +51,12 @@
                     <h5 class="mb-0 fw-bold">
                         <i class="bi bi-award me-2"></i> Scholarship Details
                     </h5>
-                    <p class="mb-0 text-muted">Fill in the form below to create a new scholarship program</p>
+                    <p class="mb-0 text-muted">Update the scholarship information below</p>
                 </div>
                 <div class="card-body p-4">
-                    <form action="{{ route('sponsor.scholarships.store') }}" method="POST">
+                    <form action="{{ route('sponsor.scholarships.update', $scholarship) }}" method="POST">
                         @csrf
+                        @method('PUT')
 
                         <div class="row mb-4">
                             <div class="col-md-12">
@@ -63,7 +64,7 @@
                                     <i class="bi bi-card-heading me-1"></i> Scholarship Title <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title"
-                                       value="{{ old('title') }}" placeholder="Enter scholarship title" required>
+                                       value="{{ old('title', $scholarship->title) }}" placeholder="Enter scholarship title" required>
                                 @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 <div class="form-text text-muted">Example: "Academic Excellence Scholarship 2023"</div>
                             </div>
@@ -75,7 +76,7 @@
                                     <i class="bi bi-text-paragraph me-1"></i> Description <span class="text-danger">*</span>
                                 </label>
                                 <textarea class="form-control @error('description') is-invalid @enderror" name="description"
-                                          id="description" rows="5" placeholder="Provide detailed information about the scholarship" required>{{ old('description') }}</textarea>
+                                          id="description" rows="5" placeholder="Provide detailed information about the scholarship" required>{{ old('description', $scholarship->description) }}</textarea>
                                 @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 <div class="form-text text-muted">Describe the scholarship purpose, benefits, and selection criteria.</div>
                             </div>
@@ -85,24 +86,18 @@
                             <div class="col-md-12">
                                 <label class="form-label fw-bold"><i class="bi bi-list-check me-1"></i> Requirements</label>
                                 <div id="requirements-container">
-                                    @if(old('requirements'))
-                                        @foreach(old('requirements') as $requirement)
+                                    @if(is_array(old('requirements', $scholarship->requirements)))
+                                        @foreach(old('requirements', $scholarship->requirements) as $requirement)
                                             <div class="input-group mb-2">
                                                 <input type="text" class="form-control" name="requirements[]" value="{{ $requirement }}">
                                                 <button type="button" class="btn btn-danger remove-requirement"><i class="bi bi-trash"></i></button>
                                             </div>
                                         @endforeach
-                                    @else
-                                        <div class="input-group mb-2">
-                                            <input type="text" class="form-control" name="requirements[]">
-                                            <button type="button" class="btn btn-danger remove-requirement"><i class="bi bi-trash"></i></button>
-                                        </div>
                                     @endif
                                 </div>
                                 <button type="button" id="add-requirement" class="btn btn-outline-primary mt-2"><i class="bi bi-plus-circle me-1"></i> Add Requirement</button>
                             </div>
                         </div>
-
 
                         <div class="row mb-4">
                             <div class="col-md-4">
@@ -110,7 +105,7 @@
                                     <i class="bi bi-calendar-plus me-1"></i> Start Date <span class="text-danger">*</span>
                                 </label>
                                 <input type="date" class="form-control @error('start_date') is-invalid @enderror"
-                                       name="start_date" id="start_date" value="{{ old('start_date') }}" required>
+                                       name="start_date" id="start_date" value="{{ old('start_date', $scholarship->start_date) }}" required>
                                 @error('start_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-4">
@@ -118,7 +113,7 @@
                                     <i class="bi bi-calendar-x me-1"></i> End Date <span class="text-danger">*</span>
                                 </label>
                                 <input type="date" class="form-control @error('end_date') is-invalid @enderror"
-                                       name="end_date" id="end_date" value="{{ old('end_date') }}" required>
+                                       name="end_date" id="end_date" value="{{ old('end_date', $scholarship->end_date) }}" required>
                                 @error('end_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-4">
@@ -126,9 +121,9 @@
                                     <i class="bi bi-check-circle me-1"></i> Status
                                 </label>
                                 <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
-                                    <option value="open" {{ old('status', 'open') == 'open' ? 'selected' : '' }}>Open</option>
-                                    <option value="closed" {{ old('status') == 'closed' ? 'selected' : '' }}>Closed</option>
-                                    <option value="on-hold" {{ old('status') == 'on-hold' ? 'selected' : '' }}>On Hold</option>
+                                    <option value="open" {{ old('status', $scholarship->status) == 'open' ? 'selected' : '' }}>Open</option>
+                                    <option value="closed" {{ old('status', $scholarship->status) == 'closed' ? 'selected' : '' }}>Closed</option>
+                                    <option value="on-hold" {{ old('status', $scholarship->status) == 'on-hold' ? 'selected' : '' }}>On Hold</option>
                                 </select>
                                 @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
@@ -142,7 +137,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
                                     <input type="number" class="form-control @error('budget') is-invalid @enderror"
-                                           name="budget" id="budget" value="{{ old('budget') }}" min="0" step="0.01">
+                                           name="budget" id="budget" value="{{ old('budget', $scholarship->budget) }}" min="0" step="0.01">
                                 </div>
                                 @error('budget')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 <div class="form-text text-muted">Enter the total scholarship budget.</div>
@@ -153,7 +148,7 @@
                                 </label>
                                 <div class="input-group">
                                     <input type="number" class="form-control @error('student_limit') is-invalid @enderror"
-                                           name="student_limit" id="student_limit" value="{{ old('student_limit') }}" min="1">
+                                           name="student_limit" id="student_limit" value="{{ old('student_limit', $scholarship->student_limit) }}" min="1">
                                     <span class="input-group-text">students</span>
                                 </div>
                                 @error('student_limit')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -162,9 +157,11 @@
                         </div>
 
                         <div class="d-flex justify-content-between border-top pt-4 mt-3">
+                            <a href="{{ route('sponsor.scholarships.index') }}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-x-circle me-1"></i> Cancel
                             </a>
                             <button type="submit" class="btn btn-primary px-4">
-                                <i class="bi bi-save me-1"></i> Create Scholarship
+                                <i class="bi bi-save me-1"></i> Save Changes
                             </button>
                         </div>
                     </form>
@@ -201,9 +198,6 @@
     .alert {
         border-radius: 0.5rem;
     }
-    .input-group-text {
-        background-color: #f8f9fa;
-    }
 </style>
 
 <script>
@@ -223,6 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startDate.value) {
         endDate.min = startDate.value;
     }
+
     document.getElementById('add-requirement').addEventListener('click', function() {
         var container = document.getElementById('requirements-container');
         var inputGroup = document.createElement('div');

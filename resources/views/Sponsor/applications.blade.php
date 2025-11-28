@@ -3,10 +3,10 @@
 @section('content')
 <div class="container-fluid py-4">
 
-    <div class="row g-3">
+    <div class="row g-4">
 
         <!-- ================= LEFT COLUMN ≤ ₱10,000 ================= -->
-        <div class="col-lg-6">
+        <div class="col-12">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-primary text-white py-2">
                     <h5 class="mb-0">
@@ -30,7 +30,6 @@
                                 <tbody>
                                     @foreach($applications->where('total_monthly_income','<=',10000) as $application)
                                         <tr>
-                                            <!-- Student -->
                                             <td>
                                                 <div>
                                                     <strong class="text-dark">
@@ -42,14 +41,12 @@
                                                 </div>
                                             </td>
 
-                                            <!-- Scholarship -->
                                             <td>
                                                 <span class="badge bg-soft-primary text-primary">
                                                     {{ $application->scholarship->title }}
                                                 </span>
                                             </td>
 
-                                            <!-- Status -->
                                             <td>
                                                 <span class="badge
                                                     @if($application->status=='approved')
@@ -63,14 +60,12 @@
                                                 </span>
                                             </td>
 
-                                            <!-- Actions -->
                                             <td class="text-end">
                                                 <div class="d-flex justify-content-end gap-1">
 
                                                     <a href="{{ route('sponsor.applications.view', $application->applicationform_id) }}"
                                                         class="btn btn-icon btn-outline-primary btn-sm"
-                                                        data-bs-toggle="tooltip"
-                                                        data-bs-title="View">
+                                                        data-bs-toggle="tooltip" data-bs-title="View">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
 
@@ -95,6 +90,7 @@
                                                             </button>
                                                         </form>
                                                     @endif
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -114,7 +110,7 @@
         </div>
 
         <!-- ================= RIGHT COLUMN > ₱10,000 ================= -->
-        <div class="col-lg-6">
+        <div class="col-12">
             <div class="card shadow-sm border-0 h-100">
                 <div class="card-header bg-info text-white py-2">
                     <h5 class="mb-0">
@@ -138,20 +134,17 @@
                                 <tbody>
                                     @foreach($applications->where('total_monthly_income','>',10000) as $application)
                                         <tr>
-                                            <!-- Student -->
                                             <td>
                                                 <strong>{{ $application->student->fname }} {{ $application->student->lname }}</strong><br>
                                                 <small class="text-muted">{{ $application->student->email }}</small>
                                             </td>
 
-                                            <!-- Scholarship -->
                                             <td>
                                                 <span class="badge bg-soft-info text-info">
                                                     {{ $application->scholarship->title }}
                                                 </span>
                                             </td>
 
-                                            <!-- Status -->
                                             <td>
                                                 <span class="badge
                                                     @if($application->status=='approved')
@@ -165,14 +158,12 @@
                                                 </span>
                                             </td>
 
-                                            <!-- Actions -->
                                             <td class="text-end">
                                                 <div class="d-flex justify-content-end gap-1">
 
                                                     <a href="{{ route('sponsor.applications.view', $application->applicationform_id) }}"
                                                         class="btn btn-icon btn-outline-primary btn-sm"
-                                                        data-bs-toggle="tooltip"
-                                                        data-bs-title="View">
+                                                        data-bs-toggle="tooltip" data-bs-title="View">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
 
@@ -197,6 +188,7 @@
                                                             </button>
                                                         </form>
                                                     @endif
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -236,6 +228,11 @@
         font-size: 13px;
     }
 
+    /* ==================== FIX: prevent <th> overlapping sidebar ==================== */
+    .table thead.sticky-top {
+        z-index: 1 !important;
+    }
+
     .badge {
         font-size: 11px;
         padding: 5px 8px;
@@ -255,7 +252,37 @@
         padding: 4rem 0;
     }
 
+    /* ==================== MOBILE FIXES ==================== */
+    @media (max-width: 576px) {
+
+        .table th:nth-child(3),
+        .table td:nth-child(3),
+        .table th:nth-child(4),
+        .table td:nth-child(4) {
+            white-space: nowrap;
+        }
+
+        .badge {
+            font-size: 10px !important;
+            padding: 4px 6px !important;
+        }
+
+        .btn-icon {
+            width: 22px !important;
+            height: 22px !important;
+        }
+
+        .card-header h5 {
+            font-size: 14px;
+        }
+
+        .app-table-wrap {
+            max-height: 50vh !important;
+        }
+    }
+
 </style>
+
 
 {{-- ==================== JS ==================== --}}
 <script>

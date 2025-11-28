@@ -14,16 +14,31 @@ class AdminDashboardController extends Controller
     {
         if (!session('admin_id')) {
             return redirect()->route('Login.LoginPage')->with('error', 'Please log in first.');
-        } else
-            $TotalApplication = ApplicationForm::count();
-        $TotalPending = ApplicationForm::where('status', 'pending')->count();
-        $TotalAccept = ApplicationForm::where('status', 'approved')->count();
-        $TotalStudent = Student::count();
-        return view('Admin.dashboard')
-            ->with('TotalApplication', $TotalApplication)
-            ->with('TotalPending', $TotalPending)
-            ->with('TotalAccept', $TotalAccept)
-            ->with('TotalStudent', $TotalStudent);
+        }
+
+        // Fetch all counts and data
+        $totalApplication = ApplicationForm::count();
+        $totalPending = ApplicationForm::where('status', 'pending')->count();
+        $totalAccept = ApplicationForm::where('status', 'approved')->count();
+        $totalStudent = Student::count();
+        $totalActiveScholarships = Scholarship::where('is_open', true)->count();
+
+        // Fetch the list of active scholarships with their application counts
+        $activeScholarships = Scholarship::where('is_open', true)
+            ->withCount('applicationForms') // This creates `application_forms_count` attribute
+            ->latest()
+            ->take(5) // Get the top 5 for the dashboard
+            ->get();
+
+        // Return view with all data
+        return view('Admin.dashboard', [
+            'TotalApplication' => $totalApplication,
+            'TotalPending' => $totalPending,
+            'TotalAccept' => $totalAccept,
+            'TotalStudent' => $totalStudent,
+            'TotalActiveScholarships' => $totalActiveScholarships,
+            'activeScholarshipsList' => $activeScholarships // Pass the new list
+        ]);
     }
 
     public function analytics()

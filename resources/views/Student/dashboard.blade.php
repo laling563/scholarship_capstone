@@ -59,7 +59,7 @@
                     <div class="card-body">
                         <i class="fas fa-scroll fa-3x mb-3 text-primary"></i>
                         <h5 class="card-title">Applications</h5>
-                        <p class="card-text">1 Active</p>
+                        <p class="card-text">{{ $totalApplications ?? 0 }}</p>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                     <div class="card-body">
                         <i class="fas fa-check-circle fa-3x mb-3 text-success"></i>
                         <h5 class="card-title">Approved</h5>
-                        <p class="card-text">0</p>
+                        <p class="card-text">{{ $approvedApplications ?? 0 }}</p>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                     <div class="card-body">
                         <i class="fas fa-hourglass-half fa-3x mb-3 text-warning"></i>
                         <h5 class="card-title">Pending</h5>
-                        <p class="card-text">1</p>
+                        <p class="card-text">{{ $pendingApplications ?? 0 }}</p>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($applications as $app)
+                        @forelse($applications ?? [] as $app)
                             <tr>
                                 <td>{{ $app->scholarship->title }}</td>
                                 <td>{{ $app->created_at->format('F d, Y') }}</td>

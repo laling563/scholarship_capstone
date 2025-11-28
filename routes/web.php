@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminApplicationController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminScholarshipController;
 use App\Http\Controllers\FindScholarshipController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ScholarController;
@@ -15,6 +16,10 @@ use App\Http\Controllers\SponsorDashboardController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Models\ApplicationForm;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/debug-applications', function () {
+    return response()->json(\App\Models\ApplicationForm::latest()->take(5)->get());
+});
 
 // URL PARA SA LOGIN PAGE
 Route::get('/LoginPage',[LoginController::class,'LoginPage'])->name('LoginPage');
@@ -48,7 +53,7 @@ Route::get('/student/scholarships', [ScholarshipController::class, 'showScholars
 Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
 
 // This is a duplicate name, I will remove one of them.
-Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
+// Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
 Route::get('/student/find-scholarship', [FindScholarshipController::class, 'index'])->name('student.find-scholarship');
 
 Route::get('/scholarships/{scholarship}/apply', [ApplicationFormController::class, 'apply'])->name('scholarships.apply');
@@ -90,4 +95,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('applications', [AdminApplicationController::class, 'index'])->name('applications');
     Route::get('applications/{id}/view', [AdminApplicationController::class, 'view'])->name('applications.view');
     Route::get('analytics', [AdminDashboardController::class, 'analytics'])->name('analytics');
+    Route::resource('scholarships', AdminScholarshipController::class);
 });
