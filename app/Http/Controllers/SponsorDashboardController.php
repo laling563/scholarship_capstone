@@ -45,7 +45,7 @@ class SponsorDashboardController extends Controller
 
         // Allowance Distribution
         $allowanceDistribution = Scholarship::whereIn('scholarship_id', $scholarshipIds)
-            ->select('grant_amount', DB::raw('sum(grant_amount) as count'))
+            ->select(DB::raw('0 as grant_amount'), DB::raw('0 as count'))
             ->groupBy('grant_amount')
             ->get();
 

@@ -87,9 +87,9 @@
 
                                     <td>
                                         <span class="badge
-                                            @if($application->status == 'Approved') bg-success
-                                            @elseif($application->status == 'Pending') bg-warning text-dark
-                                            @elseif($application->status == 'Rejected') bg-danger
+                                            @if(ucfirst($application->status) == 'Approved') bg-success
+                                            @elseif(ucfirst($application->status) == 'Pending') bg-warning text-dark
+                                            @elseif(ucfirst($application->status) == 'Rejected') bg-danger
                                             @endif px-3 py-2">
                                             {{ ucfirst($application->status) }}
                                         </span>

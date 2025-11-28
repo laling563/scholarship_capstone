@@ -66,7 +66,7 @@ class AdminDashboardController extends Controller
             ->get();
 
         // Allowance Distribution
-        $allowanceDistribution = Scholarship::select('grant_amount', DB::raw('count(*) as count'))
+        $allowanceDistribution = Scholarship::select(DB::raw('0 as grant_amount'), DB::raw('0 as count'))
             ->groupBy('grant_amount')
             ->get();
 
