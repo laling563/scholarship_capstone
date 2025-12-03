@@ -47,7 +47,7 @@
         @if(session('success'))
             <div class="d-flex">
                 <div class="container-fluid" style="margin-left: 250px;">
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -107,6 +107,17 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Automatically hide the success alert after 3 seconds
+            if ($('#success-alert').length) {
+                setTimeout(function() {
+                    $('#success-alert').fadeOut('slow');
+                }, 3000); // 3000 milliseconds = 3 seconds
+            }
+        });
+    </script>
 
     @yield('scripts')
 </body>

@@ -141,6 +141,8 @@
         color: #fff;
         z-index: 2000;
         transition: transform 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Toggle button (mobile) */

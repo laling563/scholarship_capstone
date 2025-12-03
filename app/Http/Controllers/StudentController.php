@@ -126,12 +126,11 @@ class StudentController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
+    {        $validated = $request->validate([
             'fname' => 'required|string|max:255',
             'mname' => 'nullable|string|max:255',
             'lname' => 'required|string|max:255',
-            'student_id' => 'required|string|max:20|unique:students',
+            'student_id' => ['required', 'string', 'max:20', 'unique:students', 'regex:/^\d{2}-SC-\d{4}$/'],
             'sex' => 'required|in:Male,Female',
             'course' => 'required|in:BSIT,BSHM,BSBA,BSED,BEED',
             'year_level' => 'required|in:1ST YEAR,2ND YEAR,3RD YEAR,4TH YEAR',
@@ -142,6 +141,8 @@ class StudentController extends Controller
                 Password::min(8)
                     ->letters()
             ],
+        ], [
+            'student_id.regex' => 'The Student ID must be in the format XX-SC-XXXX (e.g., 22-SC-0001).'
         ]);
 
         // Create user

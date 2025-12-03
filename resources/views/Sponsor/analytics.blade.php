@@ -16,8 +16,10 @@
                 <div class="description-box">
                     <h3 class="font-semibold mb-2">Description</h3>
                     <p class="text-sm text-gray-600">
-                        Shows how many applications each scholarship received. Helps identify the most in-demand programs.
+                        This chart shows the total number of applications submitted for each scholarship program.
+                        It provides a quick comparison of which scholarships are the most popular or in demand.
                     </p>
+
                 </div>
             </div>
 
@@ -31,7 +33,8 @@
                 <div class="description-box">
                     <h3 class="font-semibold mb-2">Description</h3>
                     <p class="text-sm text-gray-600">
-                        Breakdown of all submitted applications by status (approved, pending, rejected).
+                        This pie chart illustrates the distribution of all submitted applications based on their
+                        current status. It includes categories such as approved, pending, and rejected.
                     </p>
                 </div>
             </div>
@@ -46,7 +49,8 @@
                 <div class="description-box">
                     <h3 class="font-semibold mb-2">Description</h3>
                     <p class="text-sm text-gray-600">
-                        Displays how scholarships are distributed based on different grant/allowance amounts.
+                        This chart displays how scholarships are grouped according to their grant or allowance amounts.
+                        Each bar represents the number of scholarship programs that offer a specific level of financial support.
                     </p>
                 </div>
             </div>

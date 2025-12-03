@@ -28,8 +28,6 @@ class ScholarshipController extends Controller
 
     public function store(Request $request)
     {
-
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -42,13 +40,8 @@ class ScholarshipController extends Controller
             'budget' => 'nullable|numeric|min:0',
         ]);
 
-        // --- THIS IS THE CRUCIAL STEP TO FIX THE ERROR ---
-        if (isset($validated['requirements']) && is_array($validated['requirements'])) {
-            // Convert the PHP array of requirements into a JSON string
-            $validated['requirements'] = json_encode(array_filter($validated['requirements']));
-        } else {
-            // Ensure it's stored as an empty JSON array if no requirements were submitted
-            $validated['requirements'] = '[]';
+        if (isset($validated['requirements'])) {
+            $validated['requirements'] = array_filter($validated['requirements']);
         }
 
         $sponsor = Auth::guard('sponsor')->user();
@@ -65,7 +58,7 @@ class ScholarshipController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'requirements' => 'nullable|array',
@@ -77,8 +70,14 @@ class ScholarshipController extends Controller
             'budget' => 'nullable|numeric|min:0',
         ]);
 
+        if (isset($validated['requirements'])) {
+            $validated['requirements'] = array_filter($validated['requirements']);
+        } else {
+            $validated['requirements'] = [];
+        }
+
         $scholarship = Scholarship::findOrFail($id);
-        $scholarship->update($request->all());
+        $scholarship->update($validated);
 
         return redirect()->route('sponsor.scholarships.index')->with('success', 'Scholarship updated successfully.');
     }
@@ -112,7 +111,6 @@ class ScholarshipController extends Controller
             return back()->with('error', 'The award amount exceeds the remaining budget.');
         }
 
-        // Update application and scholarship details in a transaction
         DB::transaction(function () use ($scholarship, $application, $request) {
             $application->update(['status' => 'accepted']);
 

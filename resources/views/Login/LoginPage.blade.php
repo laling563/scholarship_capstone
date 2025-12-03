@@ -15,6 +15,13 @@
             <p class="login-subtitle">Scholarship Application Management System</p>
         </div>
 
+        @if(session('success'))
+            <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @if(session('error'))
             <div class="alert alert-danger alert-dismissible fade show">
                 <i class="bi bi-exclamation-circle me-2"></i>
@@ -292,6 +299,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Existing password toggle script
         const togglePassword = document.querySelector('.toggle-password');
         const password = document.querySelector('#password');
 
@@ -303,6 +311,16 @@
                 icon.classList.toggle('bi-eye');
                 icon.classList.toggle('bi-eye-slash');
             });
+        }
+
+        // Automatically hide the success alert after 3 seconds
+        const successAlert = document.getElementById('success-alert');
+        if (successAlert) {
+            setTimeout(() => {
+                // Using Bootstrap's alert instance to gracefully close it
+                const alert = new bootstrap.Alert(successAlert);
+                alert.close();
+            }, 3000);
         }
     });
 </script>

@@ -239,7 +239,7 @@ document.querySelectorAll('.viewBtn').forEach(button => {
                 let a = document.createElement('a');
                 a.href = `/storage/${doc.file_path}`;
                 a.target = "_blank";
-                a.innerText = doc.document_name;
+                a.innerText = doc.document_type;
                 li.appendChild(a);
                 docList.appendChild(li);
             });

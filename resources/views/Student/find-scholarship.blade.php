@@ -5,7 +5,7 @@
 @section('content')
 <div class="d-flex">
     <!-- Sidebar -->
-    <div class="bg-dark text-white sidebar" id="sidebar">
+    <div class="bg-dark text-white sidebar d-flex flex-column" id="sidebar">
         <div class="p-3 border-bottom border-secondary text-center">
             <h4 class="mb-0">PSU Scholarship</h4>
         </div>
@@ -111,6 +111,8 @@
         color: #fff;
         z-index: 2000;
         transition: transform 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Hide sidebar on mobile initially */

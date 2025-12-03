@@ -22,6 +22,8 @@ Route::get('/debug-applications', function () {
 });
 
 // URL PARA SA LOGIN PAGE
+
+Route::get('/',[LoginController::class,'LoginPage']);
 Route::get('/LoginPage',[LoginController::class,'LoginPage'])->name('LoginPage');
 // URL PARA SA REGISTRATION PAGE
 Route::get('/RegistrationPage',[LoginController::class,'RegistrationPage'])->name('RegistrationPage');

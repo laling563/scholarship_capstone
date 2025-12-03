@@ -15,11 +15,10 @@ class FindScholarshipController extends Controller
             return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
         }
 
-        // 👇 Get list of already applied scholarship IDs
         $appliedScholarshipIds = \App\Models\ApplicationForm::where('student_id', $studentId)
             ->pluck('scholarship_id');
 
-        $scholarships = Scholarship::where('is_open', true)->get();
+        $scholarships = Scholarship::where('status', 'open')->get();
 
 
         return view('Student.find-scholarship', [

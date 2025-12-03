@@ -1,13 +1,13 @@
 @extends('Student.StudentDashboardLayout')
 
-@section('title', 'Scholarship Dashboard - PSU System')
+@section('title', 'My Applications - PSU System')
 
 @section('content')
 
 <div class="d-flex">
 
     <!-- Sidebar -->
-    <div class="bg-dark text-white sidebar" id="sidebar" style="min-width:250px;">
+    <div class="bg-dark text-white sidebar d-flex flex-column" id="sidebar" style="min-width:250px;">
         <div class="p-3 border-bottom border-secondary text-center">
             <h4 class="mb-0">PSU Scholarship</h4>
         </div>
@@ -269,6 +269,8 @@
     top: 0;
     left: 0;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Main content desktop */
@@ -375,10 +377,14 @@ document.querySelectorAll('.viewBtn').forEach(button => {
             docs.forEach(doc => {
                 let li = document.createElement('li');
                 li.className = "list-group-item d-flex justify-content-between align-items-center";
+
                 let a = document.createElement('a');
                 a.href = `/storage/${doc.file_path}`;
                 a.target = "_blank";
-                a.innerText = doc.document_name;
+
+                // Use proper naming like Sponsor view
+                a.innerText = doc.original_name || doc.file_name || 'Document';
+
                 li.appendChild(a);
                 docList.appendChild(li);
             });

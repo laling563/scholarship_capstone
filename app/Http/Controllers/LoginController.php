@@ -39,6 +39,9 @@ class LoginController extends Controller
             $student = Student::where('email', $login_input)->first();
         } else {
             // If it's not an email, assume it's a student_id
+            if (!preg_match('/^\d{2}-SC-\d{4}$/', $login_input)) {
+                return back()->with('error', 'Invalid Student ID format. The Student ID must be in the format XX-SC-XXXX.');
+            }
             $student = Student::where('student_id', $login_input)->first();
         }
 
@@ -57,9 +60,8 @@ class LoginController extends Controller
                 // Add more attributes as needed
             ]);
 
-            return redirect()->route('dashboard')
-                ->with('success', 'Student login successful!')
-                ->with('scholarships', $scholarships);
+            return redirect()->route('student.dashboard')
+                ->with('success', 'Student login successful!');
         }
 
         // If no match is found
@@ -94,7 +96,8 @@ class LoginController extends Controller
         if (Auth::guard('sponsor')->attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('sponsor.dashboard'));
+            return redirect()->intended(route('sponsor.dashboard'))
+                ->with('success', 'Sponsor login successful!');
         }
 
         return back()->withErrors([

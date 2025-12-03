@@ -114,7 +114,7 @@ class ApplicationFormController extends Controller
             }
         }
 
-        return redirect()->route('dashboard')
+        return redirect()->route('student.dashboard')
             ->with('success', 'Application submitted successfully.');
     }
 
@@ -200,7 +200,7 @@ class ApplicationFormController extends Controller
             }
         }
 
-        return redirect()->route('dashboard')->with('success', 'Application submitted successfully!');
+        return redirect()->route('student.dashboard')->with('success', 'Application submitted successfully!');
     }
 
     public function show(Request $request, $id)
