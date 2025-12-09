@@ -73,7 +73,9 @@
                                         {{ \Carbon\Carbon::parse($scholarship->end_date)->format('M d, Y') }}
                                     </small>
 
-                                    @if($isApplied)
+                                    @if($hasApprovedScholarship)
+                                        <button class="btn btn-sm btn-info" disabled>Application Unavailable</button>
+                                    @elseif($isApplied)
                                         <button class="btn btn-sm btn-secondary" disabled>Already Applied</button>
                                     @elseif($isFull)
                                         <button class="btn btn-sm btn-danger" disabled>Slots Full</button>

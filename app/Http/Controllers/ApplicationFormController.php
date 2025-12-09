@@ -23,6 +23,15 @@ class ApplicationFormController extends Controller
 
         $student = Student::find($studentId);
 
+        // Check if the student has an approved scholarship
+        $approvedApplication = ApplicationForm::where('student_id', $studentId)
+            ->where('status', 'approved')
+            ->exists();
+
+        if ($approvedApplication) {
+            return redirect()->route('student.dashboard')->with('error', 'You already have an approved scholarship and cannot apply for another one.');
+        }
+
         return view('Scholarship.scholarship_apply', compact('scholarship', 'student'));
     }
 
@@ -34,6 +43,15 @@ class ApplicationFormController extends Controller
 
         if (!$studentId) {
             return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
+        }
+
+        // Check if the student has an approved scholarship
+        $approvedApplication = ApplicationForm::where('student_id', $studentId)
+            ->where('status', 'approved')
+            ->exists();
+
+        if ($approvedApplication) {
+            return redirect()->route('student.dashboard')->with('error', 'You already have an approved scholarship and cannot submit another application.');
         }
 
         // Check for existing application

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Scholarship;
 use Illuminate\Http\Request;
+use App\Models\ApplicationForm;
 
 class FindScholarshipController extends Controller
 {
@@ -15,15 +16,19 @@ class FindScholarshipController extends Controller
             return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
         }
 
-        $appliedScholarshipIds = \App\Models\ApplicationForm::where('student_id', $studentId)
+        $appliedScholarshipIds = ApplicationForm::where('student_id', $studentId)
             ->pluck('scholarship_id');
+
+        $hasApprovedScholarship = ApplicationForm::where('student_id', $studentId)
+            ->where('status', 'approved')
+            ->exists();
 
         $scholarships = Scholarship::where('status', 'open')->get();
 
-
         return view('Student.find-scholarship', [
             'appliedScholarshipIds' => $appliedScholarshipIds,
-            'scholarships' => $scholarships
+            'scholarships' => $scholarships,
+            'hasApprovedScholarship' => $hasApprovedScholarship
         ]);
     }
 }
