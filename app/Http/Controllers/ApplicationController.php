@@ -16,7 +16,7 @@ class ApplicationController extends Controller
 
             $applications = ApplicationForm::with(['student', 'scholarship', 'documents'])
                 ->whereIn('scholarship_id', $scholarshipIds)
-                ->where('status', 'pending')
+                ->where('status', 'Endorsed')
                 ->get();
 
             return view('Sponsor.applications', compact('applications'));

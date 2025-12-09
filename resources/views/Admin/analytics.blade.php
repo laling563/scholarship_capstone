@@ -2,7 +2,20 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <h1 class="text-2xl fw-bold mb-4">Analytics</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-2xl fw-bold">Analytics</h1>
+        <form method="GET" action="{{ route('admin.analytics') }}">
+            <div class="d-flex align-items-center">
+                <label for="period" class="me-2">Filter by period:</label>
+                <select name="period" id="period" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="all" @if(request('period') == 'all' || !request('period')) selected @endif>All Time</option>
+                    <option value="last_year" @if(request('period') == 'last_year') selected @endif>Last Year</option>
+                    <option value="first_semester" @if(request('period') == 'first_semester') selected @endif>First Semester</option>
+                    <option value="second_semester" @if(request('period') == 'second_semester') selected @endif>Second Semester</option>
+                </select>
+            </div>
+        </form>
+    </div>
 
     <!-- Responsive Grid -->
     <div class="row g-4">

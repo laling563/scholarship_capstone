@@ -92,6 +92,19 @@
         <p class="mb-0 text-light opacity-75">Overview of scholarships and applications</p>
     </div>
 
+    <!-- Filter -->
+    <form method="GET" action="{{ route('admin.dashboard') }}" class="my-3">
+        <div class="d-flex justify-content-end align-items-center">
+            <label for="period" class="me-2 fw-bold">Filter by period:</label>
+            <select name="period" id="period" class="form-select form-select-sm w-auto" onchange="this.form.submit()">
+                <option value="all" @if(request('period') == 'all' || !request('period')) selected @endif>All Time</option>
+                <option value="last_year" @if(request('period') == 'last_year') selected @endif>Last Year</option>
+                <option value="first_semester" @if(request('period') == 'first_semester') selected @endif>First Semester</option>
+                <option value="second_semester" @if(request('period') == 'second_semester') selected @endif>Second Semester</option>
+            </select>
+        </div>
+    </form>
+
     <!-- STATS -->
     <div class="row g-4 mb-4">
         <div class="col-xl-3 col-md-6">

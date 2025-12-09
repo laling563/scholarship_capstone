@@ -6,6 +6,12 @@
         <h2 class="fw-bold text-primary">🎓 Scholarship Applications</h2>
     </div>
 
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="card shadow-lg border-0 rounded-3">
         <div class="card-body">
             <div class="table-responsive">
@@ -36,12 +42,13 @@
                                     @if($application->status == 'Approved') bg-success
                                     @elseif($application->status == 'Pending') bg-warning text-dark
                                     @elseif($application->status == 'Rejected') bg-danger
+                                    @elseif($application->status == 'Endorsed') bg-info text-dark
                                     @else bg-secondary @endif px-3 py-2">
                                     {{ ucfirst($application->status) }}
                                 </span>
                             </td>
                             <td>{{ $application->created_at->format('M d, Y') }}</td>
-                            <td>
+                            <td class="d-flex justify-content-center align-items-center" style="gap: 0.5rem;">
                                 <button type="button"
                                     class="btn btn-outline-primary btn-sm viewBtn px-3"
                                     data-bs-toggle="modal"
@@ -91,6 +98,20 @@
                                 >
                                     <i class="bi bi-eye"></i> View
                                 </button>
+                                <form action="{{ route('admin.applications.accept', $application) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-outline-success btn-sm">
+                                        <i class="bi bi-check-circle"></i> Accept
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.applications.reject', $application) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-x-circle"></i> Reject
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach

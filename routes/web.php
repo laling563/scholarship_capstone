@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminApplicationController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminScholarshipController;
+use App\Http\Controllers\Admin\SponsorController;
 use App\Http\Controllers\FindScholarshipController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ScholarController;
@@ -33,26 +34,21 @@ Route::resource('Student',StudentController::class);
 Route::post('/login',[LoginController::class,'login'])->name('login');
 
 Route::post('/logout',[LoginController::class,'logout'])->name('logout');
-//PAG SUCCESSFUL PUPUNTA SYA SA DASHBOARD NG STUDENT!
-Route::get('/dashboard', function () {
-    if (!session('student_id')) {
-        return redirect()->route('LoginPage')->with('error', 'Please log in first.');
-    }
 
-    return view('Student.dashboard');
-})->name('dashboard');
-//PAG SUCCESSFUL PUPUNTA SYA SA DASHBOARD NG ADMIN!
-Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin_dashboard');
+//PAG SUCCESSFUL PUPUNTA SYA SA DASHBOARD NG STUDENT!
+Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
 
 // Application Form Routes
 Route::resource('application-forms', ApplicationFormController::class);
 
 Route::get('/student/scholarships', [ScholarshipController::class, 'showScholarships'])->name('student.scholarships');
 
+Route::get('/student/scholarship/{scholarship}', [StudentController::class, 'showScholarship'])->name('student.scholarship.show');
+
+Route::get('/student/scholarships/{scholarship}/apply', [ApplicationFormController::class, 'apply'])->name('student.scholarships.apply');
+
 
 // web.php
-
-Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])->name('student.dashboard');
 
 // This is a duplicate name, I will remove one of them.
 // Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
@@ -94,8 +90,12 @@ Route::get('admin/login', [LoginController::class, 'showAdminLoginForm'])->name(
 Route::post('admin/login', [LoginController::class, 'adminLogin']);
 
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('applications', [AdminApplicationController::class, 'index'])->name('applications');
     Route::get('applications/{id}/view', [AdminApplicationController::class, 'view'])->name('applications.view');
+    Route::put('applications/{application}/accept', [AdminApplicationController::class, 'accept'])->name('applications.accept');
+    Route::put('applications/{application}/reject', [AdminApplicationController::class, 'reject'])->name('applications.reject');
     Route::get('analytics', [AdminDashboardController::class, 'analytics'])->name('analytics');
     Route::resource('scholarships', AdminScholarshipController::class);
+    Route::resource('sponsors', SponsorController::class);
 });

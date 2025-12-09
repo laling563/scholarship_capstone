@@ -10,69 +10,6 @@ use Illuminate\Validation\Rules\Password;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function myScholarshipApplications()
-    {
-        $studentId = session('student_id');
-
-        if (!$studentId) {
-            return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
-        }
-
-        // Get all applications for this student with scholarship details
-        $applications = \App\Models\ApplicationForm::where('student_id', $studentId)
-            ->with('scholarship')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Format the applications data for display
-        $formattedApplications = $applications->map(function ($application) {
-            // Determine status
-            $statusClass = match ($application->status) {
-                'approved' => 'bg-success',
-                'pending' => 'bg-warning',
-                'rejected' => 'bg-danger',
-                'expired' => 'bg-secondary',
-                default => 'bg-secondary'
-            };
-
-            // Format date
-            $appliedDate = \Carbon\Carbon::parse($application->created_at)->format('F d, Y');
-
-            // Check if expired
-            $isExpired = $application->status === 'pending' &&
-                \Carbon\Carbon::parse($application->scholarship->end_date)->isPast();
-
-            if ($isExpired) {
-                $application->status = 'expired';
-                $statusClass = 'bg-secondary';
-            }
-
-            return [
-                'id' => $application->id,
-                'scholarship_id' => $application->scholarship->scholarship_code ?? ('SCH-' . date('Y') . '-' . str_pad($application->scholarship_id, 3, '0', STR_PAD_LEFT)),
-                'scholarship_name' => $application->scholarship->title,
-                'applied_date' => $appliedDate,
-                'status' => $application->status,
-                'status_class' => $statusClass,
-                'scholarship_id_numeric' => $application->scholarship_id
-            ];
-        });
-
-        // Debug to see if this method is being called
-        // dd('Method called', $formattedApplications);
-
-        // Make sure formattedApplications is never NULL
-        if (!$formattedApplications) {
-            $formattedApplications = collect([]);
-        }
-
-        return view('Student.dashboard', [
-            'formattedApplications' => $formattedApplications
-        ]);
-    }
     public function dashboard()
     {
         $studentId = session('student_id');
@@ -81,14 +18,36 @@ class StudentController extends Controller
             return redirect()->route('login')->with('error', 'Session expired. Please log in again.');
         }
 
-        $applications = \App\Models\ApplicationForm::with(['scholarship', 'student', 'documents'])
+        // Get all applications for the student
+        $applications = \App\Models\ApplicationForm::with('scholarship')
             ->where('student_id', $studentId)
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('Student.dashboard', compact('applications'));
+        // Calculate application stats
+        $totalApplications = $applications->count();
+        $approvedApplications = $applications->where('status', 'approved')->count();
+        $pendingApplications = $applications->where('status', 'pending')->count();
+
+        // Get new scholarships for announcements
+        $newScholarships = Scholarship::where('is_open', true)
+            ->where('created_at', '>=', now()->subDays(7))
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('Student.dashboard', compact(
+            'applications',
+            'newScholarships',
+            'totalApplications',
+            'approvedApplications',
+            'pendingApplications'
+        ));
     }
 
-
+    public function showScholarship(Scholarship $scholarship)
+    {
+        return view('Student.show_scholarship', compact('scholarship'));
+    }
 
     public function ListScholarship()
     {

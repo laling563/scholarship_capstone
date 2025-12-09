@@ -162,6 +162,9 @@
             <a href="{{ url('/Scholars') }}" class="{{ request()->is('Scholars') ? 'active' : '' }}">
                 <i class="fas fa-user-graduate"></i> Scholars
             </a>
+            <a href="{{ url('/admin/sponsors') }}" class="{{ request()->is('admin/sponsors*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i> Sponsor
+            </a>
         </div>
 
         <div class="sidebar-footer">

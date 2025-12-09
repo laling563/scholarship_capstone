@@ -130,7 +130,7 @@ class LoginController extends Controller
                 'admin_role' => $admin->role,
             ]);
 
-            return redirect()->route('admin_dashboard')
+            return redirect()->route('admin.dashboard')
                 ->with('success', 'Admin login successful!');
         }
 

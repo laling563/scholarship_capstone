@@ -83,6 +83,26 @@
             </div>
         </div>
 
+        <!-- Announcements -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0"><i class="fas fa-bullhorn me-2"></i>Announcements</h5>
+            </div>
+            <div class="card-body">
+                @forelse($newScholarships as $scholarship)
+                    <div class="alert alert-light d-flex justify-content-between align-items-center" role="alert">
+                        <div>
+                            <h6 class="alert-heading">{{ $scholarship->title }}</h6>
+                            <p class="mb-0">A new scholarship is available! Don't miss the chance to apply.</p>
+                        </div>
+                        <a href="{{ route('student.scholarship.show', $scholarship) }}" class="btn btn-sm btn-primary">View Details</a>
+                    </div>
+                @empty
+                    <p class="text-center text-muted">No new announcements at the moment.</p>
+                @endforelse
+            </div>
+        </div>
+
         <!-- Scholarship Applications Table -->
         <div class="card shadow-sm">
             <div class="card-header bg-light d-flex justify-content-between align-items-center">

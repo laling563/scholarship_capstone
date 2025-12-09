@@ -24,10 +24,39 @@ class Scholarship extends Model
     ];
 
     protected $casts = [
-        'requirements' => 'array',
         'start_date' => 'date',
         'end_date' => 'date',
     ];
+
+    /**
+     * Get the requirements attribute, ensuring it is always an array.
+     *
+     * @param  mixed  $value
+     * @return array
+     */
+    public function getRequirementsAttribute($value)
+    {
+        if (empty($value)) {
+            return [];
+        }
+
+        if (is_string($value)) {
+            $data = json_decode($value, true);
+            // Check if it was valid JSON
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return is_array($data) ? $data : [$data];
+            }
+            // If not valid JSON, treat it as a plain string
+            return [$value];
+        }
+
+        if (is_array($value)) {
+            return $value;
+        }
+
+        // Fallback for other unexpected types
+        return [];
+    }
 
     public function sponsor()
     {
