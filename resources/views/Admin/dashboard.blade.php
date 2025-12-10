@@ -159,7 +159,10 @@
             <div class="card card-custom">
                 <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0">Active Scholarships ({{ $TotalActiveScholarships }})</h5>
-                    <a href="{{ route('admin.scholarships.index') }}" class="btn-link small">View All</a>
+                    <!-- <div>
+                        <a href="{{ route('admin.scholarships.index') }}" class="btn-link small me-3">View All</a>
+                        <a href="{{ route('admin.scholarships.create.sport') }}" class="btn btn-primary btn-sm">Create Sport Scholarship</a>
+                    </div> -->
                 </div>
                 <div class="card-body">
                     @if($activeScholarshipsList->isEmpty())

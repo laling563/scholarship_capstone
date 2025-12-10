@@ -132,7 +132,7 @@ class StudentController extends Controller
 
 
         // Redirect to login page with success message
-        return redirect()->route('LoginPage', ['id' => 1])
+        return redirect()->route('LoginPage')
             ->with('success', 'Account created successfully! Please login.');
     }
 

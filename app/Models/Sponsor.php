@@ -16,9 +16,12 @@ class Sponsor extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'sponsor_name',
+        'username',
         'email',
         'password',
+        'contact_number',
+        'notes',
     ];
 
     /**

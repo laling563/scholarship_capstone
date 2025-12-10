@@ -21,6 +21,11 @@ class Scholarship extends Model
         'end_date',
         'budget',
         'student_limit',
+        'type',
+        'sport_type',
+        'skill_level',
+        'income_bracket',
+        'dependency_status',
     ];
 
     protected $casts = [

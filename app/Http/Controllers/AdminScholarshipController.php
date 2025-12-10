@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Scholarship;
+use App\Models\Sponsor;
 use Illuminate\Http\Request;
 
 class AdminScholarshipController extends Controller
@@ -68,5 +69,39 @@ class AdminScholarshipController extends Controller
     {
         // You can implement this later if needed
         return abort(404);
+    }
+
+    public function createSport()
+    {
+        $sponsors = Sponsor::all();
+        return view('Scholarship.sports_scholarship_form', compact('sponsors'));
+    }
+
+    public function storeSport(Request $request)
+    {
+        $validatedData = $request->validate([
+            'sponsor_id' => 'required|exists:sponsors,id',
+            'student_id' => 'required',
+            'full_name' => 'required',
+            'course_year' => 'required',
+            'date_of_birth' => 'required|date',
+            'email' => 'required|email',
+            'contact_number' => 'required',
+            'sport_category' => 'required',
+            'playing_position' => 'nullable',
+            'years_of_experience' => 'required|integer',
+            'team_membership' => 'nullable',
+            'training_schedule' => 'nullable',
+            'achievements' => 'required',
+            'level_of_competition' => 'nullable',
+            'awards_received' => 'nullable',
+        ]);
+
+        $scholarship = new Scholarship();
+        $scholarship->type = 'sport';
+        $scholarship->fill($validatedData);
+        $scholarship->save();
+
+        return redirect()->route('admin.scholarships.index')->with('success', 'Sports scholarship created successfully.');
     }
 }

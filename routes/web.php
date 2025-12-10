@@ -105,4 +105,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Student Master List Routes
     Route::get('student-master-list/create', [StudentMasterListController::class, 'create'])->name('student_master_list.create');
     Route::post('student-master-list', [StudentMasterListController::class, 'store'])->name('student_master_list.store');
+    Route::get('scholarships/create/sport', [AdminScholarshipController::class, 'createSport'])->name('scholarships.create.sport');
+    Route::post('scholarships/store/sport', [AdminScholarshipController::class, 'storeSport'])->name('scholarships.store.sport');
 });

@@ -15,13 +15,15 @@ class SponsorSeeder extends Seeder
     public function run()
     {
         Sponsor::create([
-            'name' => 'John Doe',
+            'sponsor_name' => 'John Doe',
+            'username' => 'johndoe',
             'email' => 'johndoe@example.com',
             'password' => bcrypt('password'),
         ]);
 
         Sponsor::create([
-            'name' => 'Jane Smith',
+            'sponsor_name' => 'Jane Smith',
+            'username' => 'janesmith',
             'email' => 'janesmith@example.com',
             'password' => bcrypt('password'),
         ]);

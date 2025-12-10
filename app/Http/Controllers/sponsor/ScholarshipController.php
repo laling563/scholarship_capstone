@@ -36,7 +36,11 @@ class ScholarshipController extends Controller
         ]);
 
         $sponsor = Auth::guard('sponsor')->user();
-        $sponsor->scholarships()->create($request->all());
+
+        $scholarshipData = $request->all();
+        $scholarshipData['type'] = 'Sponsored'; // Set default type
+
+        $sponsor->scholarships()->create($scholarshipData);
 
         return redirect()->route('sponsor.scholarships.index')->with('success', 'Scholarship created successfully.');
     }
