@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\Scholarship;
+use App\Models\StudentMasterList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class StudentController extends Controller
@@ -89,7 +91,14 @@ class StudentController extends Controller
             'fname' => 'required|string|max:255',
             'mname' => 'nullable|string|max:255',
             'lname' => 'required|string|max:255',
-            'student_id' => ['required', 'string', 'max:20', 'unique:students', 'regex:/^\d{2}-SC-\d{4}$/'],
+            'student_id' => [
+                'required',
+                'string',
+                'max:20',
+                'unique:students',
+                'regex:/^\d{2}-SC-\d{4}$/',
+                Rule::exists('student_master_list')->where('status', 'available'),
+            ],
             'sex' => 'required|in:Male,Female',
             'course' => 'required|in:BSIT,BSHM,BSBA,BSED,BEED',
             'year_level' => 'required|in:1ST YEAR,2ND YEAR,3RD YEAR,4TH YEAR',
@@ -101,7 +110,8 @@ class StudentController extends Controller
                     ->letters()
             ],
         ], [
-            'student_id.regex' => 'The Student ID must be in the format XX-SC-XXXX (e.g., 22-SC-0001).'
+            'student_id.regex' => 'The Student ID must be in the format XX-SC-XXXX (e.g., 22-SC-0001).',
+            'student_id.exists' => 'The provided Student ID is not in the master list or has already been used.' // Custom error message
         ]);
 
         // Create user
@@ -116,6 +126,9 @@ class StudentController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        // Update the status in the master list
+        StudentMasterList::where('student_id', $validated['student_id'])->update(['status' => 'used']);
 
 
         // Redirect to login page with success message
