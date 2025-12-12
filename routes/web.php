@@ -17,6 +17,7 @@ use App\Http\Controllers\ApplicationDocumentController;
 use App\Http\Controllers\SponsorDashboardController;
 use App\Http\Controllers\StudentDashboardController;
 use App\Http\Controllers\StudentMasterListController;
+use App\Http\Controllers\Admin\DropListController;
 use App\Models\ApplicationForm;
 use Illuminate\Support\Facades\Route;
 
@@ -101,6 +102,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('scholarships', AdminScholarshipController::class);
     Route::resource('sponsors', SponsorController::class);
     Route::resource('students', AdminStudentController::class);
+    Route::get('droplist', [DropListController::class, 'index'])->name('droplist');
 
     // Student Master List Routes
     Route::get('student-master-list/create', [StudentMasterListController::class, 'create'])->name('student_master_list.create');

@@ -168,6 +168,10 @@
              <a href="{{ route('admin.student_master_list.create') }}" class="{{ request()->is('admin/student-master-list/create') ? 'active' : '' }}">
                 <i class="fas fa-plus"></i> Add Student ID
             </a>
+            <a href="{{ route('admin.droplist') }}" class="{{ request()->is('admin/droplist') ? 'active' : '' }}">
+                 <i class="fas fa-user-times"></i> Drop List
+            </a>
+
         </div>
 
         <div class="sidebar-footer">
