@@ -1,161 +1,194 @@
 @extends('layouts.sponsor')
 
+@section('title', 'View Application - Sponsor Dashboard')
+
+@section('styles')
+<style>
+    .header-container {
+        background: linear-gradient(135deg, var(--sponsor-primary) 0%, var(--sponsor-accent) 100%);
+        color: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .card-custom {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    .info-group dt {
+        font-weight: 600;
+        color: #6c757d;
+        flex-basis: 35%;
+    }
+    .info-group dd {
+        font-weight: 500;
+    }
+    .document-card {
+        transition: all 0.2s ease-in-out;
+    }
+    .document-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    }
+</style>
+@endsection
+
 @section('content')
-<div class="container-fluid py-4">
+<div class="container-fluid px-4">
 
-    <!-- Main Content Area -->
-    <div class="row">
-        <div class="col-12">
-            <!-- Header -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-primary text-white py-3">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                        <h4 class="mb-2 mb-md-0 text-center text-md-start"><i class="bi bi-file-earmark-text me-2"></i>Student Application</h4>
-                        <span class="badge bg-warning p-2 align-self-center">{{ ucfirst($application->status) }}</span>
-                    </div>
-                </div>
-            </div>
+    <!-- HEADER -->
+    <div class="header-container d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-1">Student Application</h1>
+            <p class="mb-0 opacity-75">Submitted on {{ date('F j, Y', strtotime($application->submission_date)) }}</p>
+        </div>
+        <span class="badge fs-5 rounded-pill text-bg-{{ $application->status == 'pending' ? 'warning' : ($application->status == 'accepted' ? 'success' : 'danger') }}">
+            {{ ucfirst($application->status) }}
+        </span>
+    </div>
 
-            <!-- Student Information -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light-blue-gradient text-white py-3">
-                    <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Student Information</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6 mb-3">
-                            <div class="info-item p-3 rounded bg-light">
-                                <h6 class="text-muted small mb-1">Full Name</h6>
-                                <p class="mb-0 h5">{{ $application->student->fname }} {{ $application->student->lname }}</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <div class="info-item p-3 rounded bg-light">
-                                <h6 class="text-muted small mb-1">Email</h6>
-                                <p class="mb-0">{{ $application->student->email }}</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <div class="info-item p-3 rounded bg-light">
-                                <h6 class="text-muted small mb-1">Course & Year</h6>
-                                <p class="mb-0">{{ $application->student->course }} - Year {{ $application->student->year_level }}</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <div class="info-item p-3 rounded bg-light">
-                                <h6 class="text-muted small mb-1">Application Date</h6>
-                                <p class="mb-0">{{ date('F j, Y', strtotime($application->submission_date)) }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="row g-4">
+        <!-- Main Content Column -->
+        <div class="col-lg-8">
 
-            <!-- Personal Information Section -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light-blue-gradient text-white py-3">
+            <!-- Personal Information -->
+            <div class="card card-custom mb-4">
+                <div class="card-header">
                     <h5 class="mb-0"><i class="bi bi-person-lines-fill me-2"></i>Personal Information</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Date of Birth</h6><p class="mb-0">{{ date('F j, Y', strtotime($application->date_of_birth)) }}</p></div></div>
-                        <div class="col-lg-4 col-md-6 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Civil Status</h6><p class="mb-0">{{ ucfirst($application->civil_status) }}</p></div></div>
-                        <div class="col-lg-4 col-md-6 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Religion</h6><p class="mb-0">{{ $application->religion }}</p></div></div>
-                        <div class="col-lg-8 col-md-6 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Place of Birth</h6><p class="mb-0">{{ $application->place_of_birth }}</p></div></div>
-                        <div class="col-lg-2 col-md-6 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Height</h6><p class="mb-0">{{ $application->height }} cm</p></div></div>
-                        <div class="col-lg-2 col-md-6 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Weight</h6><p class="mb-0">{{ $application->weight }} kg</p></div></div>
-                    </div>
+                    <dl class="row mb-0 info-group">
+                        <dt class="col-sm-4">Date of Birth</dt><dd class="col-sm-8">{{ date('F j, Y', strtotime($application->date_of_birth)) }}</dd>
+                        <dt class="col-sm-4">Civil Status</dt><dd class="col-sm-8">{{ ucfirst($application->civil_status) }}</dd>
+                        <dt class="col-sm-4">Religion</dt><dd class="col-sm-8">{{ $application->religion }}</dd>
+                        <dt class="col-sm-4">Place of Birth</dt><dd class="col-sm-8">{{ $application->place_of_birth }}</dd>
+                        <dt class="col-sm-4">Height & Weight</dt><dd class="col-sm-8">{{ $application->height }} cm / {{ $application->weight }} kg</dd>
+                    </dl>
                 </div>
             </div>
 
             <!-- Address Information -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light-blue-gradient text-white py-3"><h5 class="mb-0"><i class="bi bi-house-heart me-2"></i>Address Information</h5></div>
-                <div class="card-body"><div class="row"><div class="col-12 mb-3"><div class="info-item p-3 rounded bg-light"><h6 class="text-primary mb-1"><i class="bi bi-house-door me-2"></i>Home Address</h6><p class="mb-0">{{ $application->home_address }}</p></div></div><div class="col-12 mb-3"><div class="info-item p-3 rounded bg-light"><h6 class="text-primary mb-1"><i class="bi bi-telephone me-2"></i>Contact Address</h6><p class="mb-0">{{ $application->contact_address }}</p></div></div><div class="col-12 mb-3"><div class="info-item p-3 rounded bg-light"><h6 class="text-primary mb-1"><i class="bi bi-building me-2"></i>Boarding Address</h6><p class="mb-0">{{ $application->boarding_address }}</p></div></div><div class="col-12 mb-3"><div class="info-item p-3 rounded bg-light"><h6 class="text-primary mb-1"><i class="bi bi-person-vcard me-2"></i>Landlord/Landlady</h6><p class="mb-0">{{ $application->landlord_landlady }}</p></div></div></div></div>
-            </div>
-
-            <!-- Educational Background -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light-blue-gradient text-white py-3"><h5 class="mb-0"><i class="bi bi-mortarboard me-2"></i>Educational Background</h5></div>
-                <div class="card-body"><div class="row"><div class="col-md-6 mb-3"><div class="info-item p-3 rounded bg-light"><h6 class="text-muted small mb-1">High School</h6><p class="mb-0">{{ $application->high_school_graduated }}</p></div></div><div class="col-md-6 mb-3"><div class="info-item p-3 rounded bg-light"><h6 class="text-muted small mb-1">Year Graduated</h6><p class="mb-0">{{ $application->high_school_year_graduated }}</p></div></div></div></div>
-            </div>
-
-            <!-- Family Information -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light-blue-gradient text-white py-3"><h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Family Information</h5></div>
+            <div class="card card-custom mb-4">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Address</h5></div>
                 <div class="card-body">
-                    <div class="family-member mb-4 pb-3 border-bottom">
-                        <div class="d-flex align-items-center mb-3"><div class="bg-primary rounded-circle p-2 me-3"><i class="bi bi-gender-male text-white fs-5"></i></div><h5 class="mb-0">Father's Information</h5></div>
-                        <div class="row"><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Full Name</h6><p class="mb-0">{{ $application->father_first_name }} {{ $application->father_middle_name }} {{ $application->father_last_name }}</p></div></div><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Occupation</h6><p class="mb-0">{{ $application->father_occupation }}</p></div></div><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Monthly Income</h6><p class="mb-0">₱{{ number_format($application->father_monthly_income, 2) }}</p></div></div></div>
-                    </div>
-                    <div class="family-member mb-4 pb-3 border-bottom">
-                        <div class="d-flex align-items-center mb-3"><div class="bg-danger rounded-circle p-2 me-3"><i class="bi bi-gender-female text-white fs-5"></i></div><h5 class="mb-0">Mother's Information</h5></div>
-                        <div class="row"><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Full Name</h6><p class="mb-0">{{ $application->mother_first_name }} {{ $application->mother_middle_name }} {{ $application->mother_last_name }}</p></div></div><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Occupation</h6><p class="mb-0">{{ $application->mother_occupation }}</p></div></div><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Monthly Income</h6><p class="mb-0">₱{{ number_format($application->mother_monthly_income, 2) }}</p></div></div></div>
-                    </div>
-                    <div class="family-summary">
-                        <div class="d-flex align-items-center mb-3"><div class="bg-info rounded-circle p-2 me-3"><i class="bi bi-people text-white fs-5"></i></div><h5 class="mb-0">Family Summary</h5></div>
-                        <div class="row"><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Siblings (Brothers)</h6><p class="mb-0">{{ $application->number_of_brothers }}</p></div></div><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Siblings (Sisters)</h6><p class="mb-0">{{ $application->number_of_sisters }}</p></div></div><div class="col-md-4 mb-3"><div class="info-item p-3 rounded bg-light h-100"><h6 class="text-muted small mb-1">Total Monthly Income</h6><p class="mb-0">₱{{ number_format($application->total_monthly_income, 2) }}</p></div></div></div>
-                    </div>
+                    <dl class="row mb-0 info-group">
+                        <dt class="col-sm-4">Home Address</dt><dd class="col-sm-8">{{ $application->home_address }}</dd>
+                        <dt class="col-sm-4">Contact Address</dt><dd class="col-sm-8">{{ $application->contact_address }}</dd>
+                        <dt class="col-sm-4">Boarding Address</dt><dd class="col-sm-8">{{ $application->boarding_address ?? 'N/A' }}</dd>
+                        <dt class="col-sm-4">Landlord/Landlady</dt><dd class="col-sm-8">{{ $application->landlord_landlady ?? 'N/A' }}</dd>
+                    </dl>
                 </div>
             </div>
 
-            <!-- Documents Section -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light-blue-gradient text-white py-3"><h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up me-2"></i>Uploaded Documents</h5></div>
+             <!-- Family Information -->
+            <div class="card card-custom mb-4">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Family Information</h5></div>
+                <div class="card-body">
+                    <!-- Father -->
+                    <h6 class="text-primary">Father's Details</h6>
+                    <dl class="row mb-3 info-group">
+                        <dt class="col-sm-4">Full Name</dt><dd class="col-sm-8">{{ $application->father_first_name }} {{ $application->father_last_name }}</dd>
+                        <dt class="col-sm-4">Occupation</dt><dd class="col-sm-8">{{ $application->father_occupation }}</dd>
+                        <dt class="col-sm-4">Monthly Income</dt><dd class="col-sm-8">₱{{ number_format($application->father_monthly_income, 2) }}</dd>
+                    </dl>
+                    <!-- Mother -->
+                    <h6 class="text-primary mt-4">Mother's Details</h6>
+                     <dl class="row mb-3 info-group">
+                        <dt class="col-sm-4">Full Name</dt><dd class="col-sm-8">{{ $application->mother_first_name }} {{ $application->mother_last_name }}</dd>
+                        <dt class="col-sm-4">Occupation</dt><dd class="col-sm-8">{{ $application->mother_occupation }}</dd>
+                        <dt class="col-sm-4">Monthly Income</dt><dd class="col-sm-8">₱{{ number_format($application->mother_monthly_income, 2) }}</dd>
+                    </dl>
+                    <!-- Summary -->
+                    <h6 class="text-primary mt-4">Family Summary</h6>
+                     <dl class="row mb-0 info-group">
+                        <dt class="col-sm-4">Number of Siblings</dt><dd class="col-sm-8">{{ $application->number_of_brothers + $application->number_of_sisters }}</dd>
+                        <dt class="col-sm-4">Total Monthly Income</dt><dd class="col-sm-8">₱{{ number_format($application->total_monthly_income, 2) }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="card card-custom mb-4">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up me-2"></i>Uploaded Documents</h5></div>
                 <div class="card-body">
                     @if($application->documents->count() > 0)
-                        <div class="row">
+                        <div class="row g-3">
                             @foreach ($application->documents as $document)
-                                <div class="col-md-6 mb-3">
-                                    <div class="document-card p-3 border rounded d-flex flex-column flex-sm-row align-items-start align-items-sm-center h-100">
-                                        <i class="bi bi-file-earmark-text text-primary me-3 mb-2 mb-sm-0" style="font-size: 2.5rem;"></i>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">{{ $document->document_type }}</h6>
-                                            <small class="text-muted d-block mb-2">Uploaded: {{ $document->created_at->format('M d, Y') }}</small>
-                                            <a href="{{ asset('storage/' . $document->file_path) }}" class="btn btn-sm btn-outline-primary" target="_blank"><i class="bi bi-download me-1"></i> View File</a>
+                                <div class="col-md-6">
+                                    <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank" class="card document-card text-decoration-none shadow-sm h-100">
+                                        <div class="card-body d-flex align-items-center">
+                                            <i class="bi bi-file-earmark-text text-primary fs-2 me-3"></i>
+                                            <div class="flex-grow-1">
+                                                <h6 class="card-title text-dark mb-1">{{ $document->document_type }}</h6>
+                                                <small class="text-muted">Uploaded: {{ $document->created_at->format('M d, Y') }}</small>
+                                            </div>
+                                            <i class="bi bi-box-arrow-up-right text-muted ms-2"></i>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                             @endforeach
                         </div>
                     @else
-                        <div class="alert alert-info">No documents uploaded for this application.</div>
+                        <div class="alert alert-light text-center">No documents were uploaded.</div>
                     @endif
                 </div>
             </div>
 
-            <!-- Additional Information -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-light-blue-gradient text-white py-3"><h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Additional Information</h5></div>
-                <div class="card-body"><div class="info-item p-3 rounded bg-light"><h6 class="text-muted small mb-1">Notes</h6><p class="mb-0">{{ $application->notes ?? 'No additional notes provided.' }}</p></div></div>
+             <!-- Additional Information -->
+            <div class="card card-custom">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-journal-text me-2"></i>Additional Notes</h5></div>
+                <div class="card-body">
+                    <p class="mb-0">{{ $application->notes ?? 'No additional notes provided.' }}</p>
+                </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="card border-0 shadow-sm">
-                 <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
-                    <a href="{{ route('sponsor.applications') }}" class="btn btn-outline-secondary mb-2 mb-md-0"><i class="bi bi-arrow-left me-2"></i>Back to List</a>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="col-lg-4">
+
+            <!-- Student Summary -->
+            <div class="card card-custom mb-4">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-circle fs-1 text-primary"></i>
+                    <h4 class="mt-2 mb-1">{{ $application->student->fname }} {{ $application->student->lname }}</h4>
+                    <p class="text-muted mb-3">{{ $application->student->email }}</p>
+                    <dl class="row mb-0 text-start info-group">
+                        <dt class="col-12">Course</dt><dd class="col-12">{{ $application->student->course }}</dd>
+                        <dt class="col-12">Year Level</dt><dd class="col-12">{{ $application->student->year_level }}</dd>
+                        <dt class="col-12">High School</dt><dd class="col-12 mb-0">{{ $application->high_school_graduated }} ({{ $application->high_school_year_graduated }})</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card card-custom">
+                <div class="card-header"><h5 class="mb-0"><i class="bi bi-check2-circle me-2"></i>Actions</h5></div>
+                <div class="card-body">
+                    <p class="text-muted">Review this application and choose an action below.</p>
                     @if($application->status == 'pending')
-                        <div class="d-flex">
-                            <form action="{{ route('sponsor.applications.reject', $application->applicationform_id) }}" method="POST" class="me-2">
-                                @csrf @method('PUT')
-                                <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle me-2"></i>Reject</button>
-                            </form>
+                        <div class="d-grid gap-2">
                             <form action="{{ route('sponsor.applications.accept', $application->applicationform_id) }}" method="POST">
                                 @csrf @method('PUT')
-                                <button type="submit" class="btn btn-success"><i class="bi bi-check-circle me-2"></i>Accept</button>
+                                <button type="submit" class="btn btn-success btn-lg w-100"><i class="bi bi-check-circle me-2"></i>Accept</button>
+                            </form>
+                            <form action="{{ route('sponsor.applications.reject', $application->applicationform_id) }}" method="POST">
+                                @csrf @method('PUT')
+                                <button type="submit" class="btn btn-danger btn-lg w-100"><i class="bi bi-x-circle me-2"></i>Reject</button>
                             </form>
                         </div>
+                    @else
+                        <p class="text-center fw-bold">A decision has already been made for this application.</p>
                     @endif
+                    <hr>
+                    <a href="{{ route('sponsor.applications') }}" class="btn btn-outline-secondary w-100"><i class="bi bi-arrow-left me-2"></i>Back to Applications</a>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-
-<style>
-    .bg-light-blue-gradient { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
-    .document-card { transition: all 0.3s ease; }
-    .document-card:hover { box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); transform: translateY(-2px); }
-</style>
 @endsection

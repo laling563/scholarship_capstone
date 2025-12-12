@@ -1,183 +1,192 @@
 @extends('layouts.sponsor')
 
+@section('title', 'Analytics & Reports - Sponsor Dashboard')
+
+@section('styles')
+<style>
+    .header-container {
+        background: linear-gradient(135deg, var(--sponsor-primary) 0%, var(--sponsor-accent) 100%);
+        color: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .header-container h1 {
+        font-weight: 700;
+    }
+    .chart-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .chart-card .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .chart-card .card-body {
+        flex-grow: 1;
+        padding: 1.5rem;
+    }
+    .chart-container {
+        position: relative;
+        height: 280px;
+        width: 100%;
+    }
+</style>
+@endsection
+
 @section('content')
-    <div class="container mx-auto">
-        <h1 class="text-2xl font-bold mb-4">Analytics</h1>
+<div class="container-fluid px-4">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-            <!-- Application Volume -->
-            <div class="bg-white p-4 rounded-lg shadow-md analytics-card">
-                <div class="chart-wrapper">
-                    <h2 class="text-lg font-medium mb-2">Application Volume by Scholarship</h2>
-                    <canvas id="applicationVolumeChart" class="chart-container"></canvas>
-                </div>
-
-                <div class="description-box">
-                    <h3 class="font-semibold mb-2">Description</h3>
-                    <p class="text-sm text-gray-600">
-                        This chart shows the total number of applications submitted for each scholarship program.
-                        It provides a quick comparison of which scholarships are the most popular or in demand.
-                    </p>
-
-                </div>
-            </div>
-
-            <!-- Application Status -->
-            <div class="bg-white p-4 rounded-lg shadow-md analytics-card">
-                <div class="chart-wrapper">
-                    <h2 class="text-lg font-medium mb-2">Application Status</h2>
-                    <canvas id="applicationStatusChart" class="chart-container"></canvas>
-                </div>
-
-                <div class="description-box">
-                    <h3 class="font-semibold mb-2">Description</h3>
-                    <p class="text-sm text-gray-600">
-                        This pie chart illustrates the distribution of all submitted applications based on their
-                        current status. It includes categories such as approved, pending, and rejected.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Allowance Distribution -->
-            <div class="bg-white p-4 rounded-lg shadow-md analytics-card">
-                <div class="chart-wrapper">
-                    <h2 class="text-lg font-medium mb-2">Allowance Distribution</h2>
-                    <canvas id="allowanceDistributionChart" class="chart-container"></canvas>
-                </div>
-
-                <div class="description-box">
-                    <h3 class="font-semibold mb-2">Description</h3>
-                    <p class="text-sm text-gray-600">
-                        This chart displays how scholarships are grouped according to their grant or allowance amounts.
-                        Each bar represents the number of scholarship programs that offer a specific level of financial support.
-                    </p>
-                </div>
-            </div>
-
-        </div>
+    <!-- HEADER -->
+    <div class="header-container">
+        <h1 class="mb-1">Analytics & Reports</h1>
+        <p class="mb-0 opacity-75">Visual insights into your scholarship data.</p>
     </div>
 
-    {{-- ==================== FIXED LAYOUT & CHART SIZE ==================== --}}
-    <style>
-        /* Ensures description stays on the right */
-        .analytics-card {
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
-        }
+    <!-- CHARTS GRID -->
+    <div class="row g-4">
+        <!-- Application Volume -->
+        <div class="col-lg-6 col-xl-4">
+            <div class="card chart-card">
+                <div class="card-header py-3">
+                    <h6 class="fw-bold mb-0 text-center">Application Volume by Scholarship</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="applicationVolumeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        .chart-wrapper {
-            width: 60%;
-        }
+        <!-- Application Status -->
+        <div class="col-lg-6 col-xl-4">
+            <div class="card chart-card">
+                <div class="card-header py-3">
+                    <h6 class="fw-bold mb-0 text-center">Overall Application Status</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="applicationStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        .description-box {
-            width: 40%;
-            border-left: 1px solid #e5e7eb;
-            padding-left: 1rem;
-        }
+        <!-- Allowance Distribution -->
+        <div class="col-lg-12 col-xl-4">
+            <div class="card chart-card">
+                <div class="card-header py-3">
+                    <h6 class="fw-bold mb-0 text-center">Scholarships by Grant Amount</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="allowanceDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
 
-        /* Chart Height */
-        .chart-container,
-        canvas {
-            max-height: 200px !important;
-        }
-
-        /* Mobile layout */
-        @media (max-width: 768px) {
-            .analytics-card {
-                flex-direction: column;
-            }
-
-            .chart-wrapper,
-            .description-box {
-                width: 100%;
-                border-left: none;
-                padding-left: 0;
-            }
-        }
-    </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        // Application Volume Chart
-        const applicationVolumeCtx = document.getElementById('applicationVolumeChart').getContext('2d');
-        const applicationVolumeChart = new Chart(applicationVolumeCtx, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($applicationVolume->pluck('title')) !!},
-                datasets: [{
-                    label: 'Number of Applications',
-                    data: {!! json_encode($applicationVolume->pluck('application_forms_count')) !!},
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const commonOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: { display: false },
             },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#f0f0f0', borderDash: [2, 4] },
+                    ticks: { font: { size: 11 } }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 11 } }
                 }
             }
-        });
+        };
 
-        // Application Status Chart
-        const applicationStatusCtx = document.getElementById('applicationStatusChart').getContext('2d');
-        const applicationStatusChart = new Chart(applicationStatusCtx, {
-            type: 'pie',
-            data: {
-                labels: {!! json_encode($applicationStatus->pluck('status')) !!},
-                datasets: [{
-                    label: 'Application Status',
-                    data: {!! json_encode($applicationStatus->pluck('count')) !!},
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.5)',
-                        'rgba(255, 99, 132, 0.5)',
-                        'rgba(255, 206, 86, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                maintainAspectRatio: false
-            }
-        });
-
-        // Allowance Distribution Chart
-        const allowanceDistributionCtx = document.getElementById('allowanceDistributionChart').getContext('2d');
-        const allowanceDistributionChart = new Chart(allowanceDistributionCtx, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($allowanceDistribution->pluck('grant_amount')->map(fn($val) => (string)$val)) !!},
-                datasets: [{
-                    label: 'Total Allowance',
-                    data: {!! json_encode($allowanceDistribution->pluck('count')) !!},
-                    backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    y: { beginAtZero: true },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Grant Amount'
-                        }
-                    }
+        const pieOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { padding: 20, boxWidth: 12, font: { size: 12 } }
                 }
             }
-        });
-    </script>
+        };
+
+        // 1. Application Volume Chart
+        const applicationVolumeCtx = document.getElementById('applicationVolumeChart')?.getContext('2d');
+        if (applicationVolumeCtx) {
+            new Chart(applicationVolumeCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($applicationVolume->pluck('title')) !!},
+                    datasets: [{
+                        label: 'Applications',
+                        data: {!! json_encode($applicationVolume->pluck('application_forms_count')) !!},
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: commonOptions
+            });
+        }
+
+        // 2. Application Status Chart
+        const applicationStatusCtx = document.getElementById('applicationStatusChart')?.getContext('2d');
+        if(applicationStatusCtx) {
+            new Chart(applicationStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: {!! json_encode($applicationStatus->pluck('status')->map('ucfirst')) !!},
+                    datasets: [{
+                        data: {!! json_encode($applicationStatus->pluck('count')) !!},
+                        backgroundColor: ['rgba(46, 204, 113, 0.7)', 'rgba(241, 196, 15, 0.7)', 'rgba(231, 76, 60, 0.7)'],
+                        borderColor: ['#2ecc71', '#f1c40f', '#e74c3c'],
+                        borderWidth: 2
+                    }]
+                },
+                options: pieOptions
+            });
+        }
+
+        // 3. Allowance Distribution Chart
+        const allowanceDistributionCtx = document.getElementById('allowanceDistributionChart')?.getContext('2d');
+        if (allowanceDistributionCtx) {
+            new Chart(allowanceDistributionCtx, {
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($allowanceDistribution->pluck('grant_amount')->map(fn($val) => '₱'.number_format($val))) !!},
+                    datasets: [{
+                        label: 'Scholarships',
+                        data: {!! json_encode($allowanceDistribution->pluck('count')) !!},
+                        backgroundColor: 'rgba(155, 89, 182, 0.7)',
+                        borderColor: 'rgba(155, 89, 182, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: { ...commonOptions, plugins: { ...commonOptions.plugins, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw} scholarships` } } } }
+            });
+        }
+    });
+</script>
 @endsection

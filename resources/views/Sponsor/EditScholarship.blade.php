@@ -1,20 +1,42 @@
 @extends('layouts.sponsor')
 
+@section('title', 'Edit Scholarship - Sponsor Dashboard')
+
+@section('styles')
+<style>
+    .header-container {
+        background: linear-gradient(135deg, var(--sponsor-primary) 0%, var(--sponsor-accent) 100%);
+        color: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .header-container h1 {
+        font-weight: 700;
+    }
+    .card-custom {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+    }
+    .form-label {
+        font-weight: 600;
+    }
+    .input-group-text {
+        background-color: #f8f9fa;
+    }
+</style>
+@endsection
+
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="fw-bold text-primary mb-0">
-                        <i class="bi bi-pencil-square me-2"></i> Edit Scholarship
-                    </h2>
-                </div>
-                <a href="{{ route('sponsor.scholarships.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i> Back to List
-                </a>
-            </div>
-        </div>
+<div class="container-fluid px-4">
+
+    <!-- HEADER -->
+    <div class="header-container">
+        <h1 class="mb-1">Edit Scholarship</h1>
+        <p class="mb-0 opacity-75">Update the details for your scholarship program.</p>
     </div>
 
     @if($errors->any())
@@ -34,29 +56,56 @@
         </div>
     @endif
 
-    <div class="card shadow-sm border-0 overflow-hidden">
-        <div class="card-header bg-white border-bottom p-4">
-            <h5 class="mb-0 fw-bold"><i class="bi bi-award me-2"></i> Scholarship Details</h5>
-            <p class="mb-0 text-muted">Update the scholarship information below</p>
-        </div>
-        <div class="card-body p-4">
+    <!-- EDIT FORM -->
+    <div class="card card-custom">
+        <div class="card-body p-4 p-md-5">
             <form action="{{ route('sponsor.scholarships.update', $scholarship) }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                <div class="mb-4">
-                    <label for="title" class="form-label fw-bold"><i class="bi bi-card-heading me-1"></i> Scholarship Title <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $scholarship->title) }}" required>
-                </div>
+                <div class="row g-4">
+                    <div class="col-12">
+                        <label for="title" class="form-label">Scholarship Title</label>
+                        <input type="text" class="form-control form-control-lg" id="title" name="title" value="{{ old('title', $scholarship->title) }}" required>
+                    </div>
 
-                <div class="mb-4">
-                    <label for="description" class="form-label fw-bold"><i class="bi bi-text-paragraph me-1"></i> Description <span class="text-danger">*</span></label>
-                    <textarea class="form-control" name="description" id="description" rows="5" required>{{ old('description', $scholarship->description) }}</textarea>
-                </div>
+                    <div class="col-12">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required>{{ old('description', $scholarship->description) }}</textarea>
+                    </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-bold"><i class="bi bi-list-check me-1"></i> Requirements</label>
-                    <div id="requirements-container">
+                    <div class="col-md-4">
+                        <label for="budget" class="form-label">Budget</label>
+                        <div class="input-group"><span class="input-group-text">₱</span><input type="number" class="form-control" name="budget" id="budget" value="{{ old('budget', $scholarship->budget) }}" min="0" step="100"></div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="student_limit" class="form-label">Student Limit</label>
+                        <div class="input-group"><input type="number" class="form-control" name="student_limit" id="student_limit" value="{{ old('student_limit', $scholarship->student_limit) }}" min="1"><span class="input-group-text">students</span></div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="open" {{ old('status', $scholarship->status) == 'open' ? 'selected' : '' }}>Open</option>
+                            <option value="closed" {{ old('status', $scholarship->status) == 'closed' ? 'selected' : '' }}>Closed</option>
+                            <option value="on-hold" {{ old('status', $scholarship->status) == 'on-hold' ? 'selected' : '' }}>On Hold</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="start_date" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" id="start_date" value="{{ old('start_date', $scholarship->start_date->format('Y-m-d')) }}" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="end_date" class="form-label">End Date</label>
+                        <input type="date" class="form-control" name="end_date" id="end_date" value="{{ old('end_date', $scholarship->end_date->format('Y-m-d')) }}" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Requirements</label>
+                        <div id="requirements-container">
                         @php
                             $requirements = old('requirements', $scholarship->requirements);
                             while (is_string($requirements)) {
@@ -74,7 +123,7 @@
                         @endphp
                         @if(count($requirements) > 0)
                             @foreach($requirements as $requirement)
-                                @if(!empty($requirement)) {{-- Added check to skip empty strings --}}
+                                @if(!empty($requirement))
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" name="requirements[]" value="{{ $requirement }}">
                                         <button type="button" class="btn btn-outline-danger remove-requirement"><i class="bi bi-trash"></i></button>
@@ -87,44 +136,14 @@
                                 <button type="button" class="btn btn-outline-danger remove-requirement"><i class="bi bi-trash"></i></button>
                             </div>
                         @endif
-                    </div>
-                    <button type="button" id="add-requirement" class="btn btn-outline-primary btn-sm mt-2"><i class="bi bi-plus-circle me-1"></i> Add Requirement</button>
-                </div>
-
-
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label for="start_date" class="form-label fw-bold"><i class="bi bi-calendar-plus me-1"></i> Start Date <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" name="start_date" id="start_date" value="{{ old('start_date', $scholarship->start_date->format('Y-m-d')) }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="end_date" class="form-label fw-bold"><i class="bi bi-calendar-x me-1"></i> End Date <span class="text-danger">*</span></label>
-                        <input type="date" class="form-control" name="end_date" id="end_date" value="{{ old('end_date', $scholarship->end_date->format('Y-m-d')) }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="status" class="form-label fw-bold"><i class="bi bi-check-circle me-1"></i> Status</label>
-                        <select class="form-select" id="status" name="status">
-                            <option value="open" {{ old('status', $scholarship->status) == 'open' ? 'selected' : '' }}>Open</option>
-                            <option value="closed" {{ old('status', $scholarship->status) == 'closed' ? 'selected' : '' }}>Closed</option>
-                            <option value="on-hold" {{ old('status', $scholarship->status) == 'on-hold' ? 'selected' : '' }}>On Hold</option>
-                        </select>
+                        </div>
+                        <button type="button" id="add-requirement" class="btn btn-outline-primary btn-sm mt-2"><i class="bi bi-plus-circle me-1"></i> Add Requirement</button>
                     </div>
                 </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label for="budget" class="form-label fw-bold"><i class="bi bi-cash-coin me-1"></i> Budget</label>
-                        <div class="input-group"><span class="input-group-text">₱</span><input type="number" class="form-control" name="budget" id="budget" value="{{ old('budget', $scholarship->budget) }}" min="0" step="100"></div>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="student_limit" class="form-label fw-bold"><i class="bi bi-people me-1"></i> Student Limit</label>
-                        <div class="input-group"><input type="number" class="form-control" name="student_limit" id="student_limit" value="{{ old('student_limit', $scholarship->student_limit) }}" min="1"><span class="input-group-text">students</span></div>
-                    </div>
-                </div>
-
-                <div class="d-flex justify-content-between border-top pt-4 mt-3">
-                    <a href="{{ route('sponsor.scholarships.index') }}" class="btn btn-outline-secondary px-4"><i class="bi bi-x-circle me-1"></i> Cancel</a>
-                    <button type="submit" class="btn btn-primary px-4"><i class="bi bi-save me-1"></i> Save Changes</button>
+                <div class="d-flex justify-content-end mt-5">
+                    <a href="{{ route('sponsor.scholarships.index') }}" class="btn btn-light me-3">Cancel</a>
+                    <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
                 </div>
             </form>
         </div>

@@ -81,6 +81,7 @@
                                     @if($application->status == 'Approved') table-success
                                     @elseif($application->status == 'Rejected') table-danger
                                     @elseif($application->status == 'Pending') table-warning
+                                    @elseif($application->status == 'Endorsed') table-info
                                     @endif">
 
                                     <td>{{ $application->scholarship->title }}</td>
