@@ -11,7 +11,7 @@ class Student extends Model
     public function applicationForms() {
         return $this->hasMany(ApplicationForm::class);
     }
-    
+
     protected $fillable = [
         'fname',
         'mname',
@@ -23,7 +23,7 @@ class Student extends Model
         'email',
         'password',
     ];
-    
+
 
     protected $hidden = [
         'password',

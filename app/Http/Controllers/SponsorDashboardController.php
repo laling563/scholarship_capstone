@@ -63,12 +63,18 @@ class SponsorDashboardController extends Controller
             ->groupBy('status')
             ->get();
 
-        // Allowance Distribution - not time-dependent
-        $allowanceDistribution = Scholarship::whereIn('scholarship_id', $scholarshipIds)
-            ->select('grant_amount', DB::raw('count(*) as count'))
-            ->where('grant_amount', '>', 0)
-            ->groupBy('grant_amount')
-            ->get();
+        // Allowance Distribution - Counts accepted students per grant amount
+        $allowanceDistributionQuery = ApplicationForm::join('scholarships', 'application_forms.scholarship_id', '=', 'scholarships.scholarship_id')
+            ->where('application_forms.status', 'approved')
+            ->whereIn('application_forms.scholarship_id', $scholarshipIds)
+            ->select('scholarships.grant_amount', DB::raw('count(*) as count'))
+            ->groupBy('scholarships.grant_amount');
+
+        if ($dateRange) {
+            $allowanceDistributionQuery->whereBetween('application_forms.created_at', $dateRange);
+        }
+
+        $allowanceDistribution = $allowanceDistributionQuery->get();
 
         return view('Sponsor.analytics', compact(
             'applicationVolume',

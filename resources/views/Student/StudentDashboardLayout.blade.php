@@ -37,6 +37,49 @@
     </style>
     @yield('styles')
 </head>
+    <!-- Sidebar -->
+<div class="bg-dark text-white sidebar" id="sidebar">
+        <div class="p-3 border-bottom border-secondary text-center">
+            <h4 class="mb-0">PSU Scholarship</h4>
+        </div>
+
+        <div class="p-3 border-bottom border-secondary bg-primary bg-opacity-25 text-center">
+            <i class="fas fa-user-circle fa-3x mb-2"></i>
+            <h6 class="mb-0">{{ session('student_fname') }} {{ session('student_lname') }}</h6>
+        </div>
+
+        <ul class="nav flex-column p-3">
+            <li class="nav-item">
+                <a class="nav-link text-white active bg-primary bg-opacity-75 rounded" href="/student/dashboard">
+                    <i class="fas fa-home me-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/student/my-applications">
+                    <i class="fas fa-scroll me-2"></i> My Applications
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="/student/find-scholarship">
+                    <i class="fas fa-search me-2"></i> Find Scholarships
+                </a>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer text-center mt-auto mb-3">
+            <a href="#"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+               class="text-danger fw-bold">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        </div>
+    </div>
+
+    <!-- Toggle Button for Mobile -->
+
 <body>
 
 
