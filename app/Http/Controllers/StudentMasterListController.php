@@ -9,7 +9,7 @@ class StudentMasterListController extends Controller
 {
     public function create()
     {
-        return view('admin.student_master_list.create');
+        return view('Admin.student_master_list.create');
     }
 
     public function store(Request $request)

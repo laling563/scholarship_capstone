@@ -975,7 +975,7 @@
                 if (window.innerWidth < 992) {
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
-                }
+                }s
             });
         });
 
